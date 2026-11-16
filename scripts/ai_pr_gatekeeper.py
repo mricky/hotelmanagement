@@ -80,9 +80,10 @@ Analyze the following Git Diff with extreme rigor against mission-critical hospi
    - Night Audit (Close-Day) Atomicity: Daily room revenue posting, PB1 (10% Hotel Tax), and 10% Service Charge must occur in an atomic transaction per occupied folio. A failure in one folio must be logged and handled without corrupting the audit cycle.
    - Split-Folio & Routing Integrity: Verify billing routes (Company Master vs Personal Incidental) do not lose unallocated charges.
 
-3. Payment Gateway Webhook & Idempotency (HIGH):
+3. Payment Gateway Webhook & API Idempotency (HIGH):
    - Webhook Signature: Ensure payment webhook endpoints (Midtrans, Xendit, etc.) rigorously verify SHA-512 / HMAC signatures before marking bookings as PAID.
    - Webhook Idempotency: Enforce idempotency keys or unique transaction reference verification to prevent duplicate folio payments or double invoice generation on network retries.
+   - Client API Idempotency: Verify that critical financial and inventory state-mutating endpoints (e.g. create booking, post-to-room folio charges, settlement, refunds) handle or validate idempotency (via `Idempotency-Key` headers, unique request tokens, or database unique constraints) to prevent duplicate transactions caused by network retries or double submission.
 
 4. Room Status State Machine & Security (HIGH):
    - State Machine Enforcement: Check-in should never be allowed on rooms with status `DIRTY` or `OUT_OF_ORDER`. Transitions (`CLEAN` -> `OCCUPIED` -> `DIRTY` -> `INSPECTED`) must be valid.
@@ -92,7 +93,7 @@ Analyze the following Git Diff with extreme rigor against mission-critical hospi
 5. Calculate an overall Risk Score (integer 0 to 100):
    - 0 to 24: Low Risk (Clean hospitality PMS code, proper locking, atomic night audit)
    - 25 to 69: Medium Risk (Minor optimization issues, missing edge case logging; requires review)
-   - 70 to 100: High/Critical Risk (Overbooking race condition, unlocked inventory, unverified payment webhook, floating-point folio balance corruption; BLOCKS merge)
+   - 70 to 100: High/Critical Risk (Overbooking race condition, unlocked inventory, unverified payment webhook, missing idempotency on financial mutations, floating-point folio balance corruption; BLOCKS merge)
 
 CRITICAL: Return output ONLY as pure valid JSON conforming strictly to this schema:
 {{
@@ -235,3 +236,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
