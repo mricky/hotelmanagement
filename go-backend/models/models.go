@@ -281,13 +281,15 @@ type APIAccessLog struct {
 	CreatedAt  time.Time `gorm:"autoCreateTime" json:"created_at"`
 }
 
+// IdempotencyRecord stores sanitized transaction responses to ensure atomic, non-duplicate execution.
+// Sensitive guest PII and financial cardholder data are masked prior to persistence for PCI-DSS & GDPR compliance.
 type IdempotencyRecord struct {
 	ID           uint      `gorm:"primaryKey" json:"id"`
 	Key          string    `gorm:"uniqueIndex;size:255;not null" json:"key"`
 	Endpoint     string    `gorm:"size:255;not null" json:"endpoint"`
 	Method       string    `gorm:"size:10;not null" json:"method"`
 	StatusCode   int       `gorm:"not null" json:"status_code"`
-	ResponseBody string    `gorm:"type:text" json:"response_body"`
+	ResponseBody string    `gorm:"type:text" json:"response_body"` // PII & PCI masked sanitized response
 	CreatedAt    time.Time `gorm:"autoCreateTime" json:"created_at"`
 }
 

@@ -61,3 +61,42 @@ func TestIdempotencyMiddleware(t *testing.T) {
 		t.Errorf("Expected handler to be executed only 1 time, but was executed %d times", finalCount)
 	}
 }
+
+func TestMaskSensitiveData(t *testing.T) {
+	raw := `{"status":"success","card_number":"4111111111111234","cvv":"123","token":"secret_abc","nik":"3171012345670001"}`
+	masked := MaskSensitiveData(raw)
+
+	if masked == raw {
+		t.Errorf("Expected data to be masked, got raw: %s", masked)
+	}
+	if !contains(masked, `"card_number":"4111********1234"`) {
+		t.Errorf("Expected PAN to be masked, got: %s", masked)
+	}
+	if !contains(masked, `"cvv":"***"`) {
+		t.Errorf("Expected CVV to be masked, got: %s", masked)
+	}
+	if !contains(masked, `"token":"[REDACTED]"`) {
+		t.Errorf("Expected token to be redacted, got: %s", masked)
+	}
+}
+
+func contains(s, substr string) bool {
+	return len(s) >= len(substr) && (s == substr || len(substr) == 0 || (len(s) > 0 && bytesContains([]byte(s), []byte(substr))))
+}
+
+func bytesContains(b, subslice []byte) bool {
+	for i := 0; i+len(subslice) <= len(b); i++ {
+		match := true
+		for j := 0; j < len(subslice); j++ {
+			if b[i+j] != subslice[j] {
+				match = false
+				break
+			}
+		}
+		if match {
+			return true
+		}
+	}
+	return false
+}
+
