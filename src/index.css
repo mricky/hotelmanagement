@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-['Plus_Jakarta_Sans',sans-serif] bg-slate-50 text-slate-900 antialiased;
+  }
+}
+
+/* ROCK-SOLID PRINT ISOLATION STYLES */
+@media print {
+  /* 1. Hide everything on the page visually by default */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* 2. Force colors and background images in print preview */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* 3. Make ONLY the printable deposit receipt modal and its children visible */
+  .printable-modal-overlay,
+  .printable-modal-overlay * {
+    visibility: visible !important;
+  }
+
+  /* 4. Position the modal overlay to fill the printed page */
+  .printable-modal-overlay {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    background: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+    overflow: visible !important;
+    z-index: 999999 !important;
+  }
+
+  .printable-modal-card {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-shadow: none !important;
+    border: none !important;
+    max-height: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .printable-receipt-body {
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* 5. Hide buttons and action bars inside the modal during print */
+  button,
+  .print\:hidden {
+    display: none !important;
+  }
+}

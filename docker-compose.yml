@@ -1,0 +1,103 @@
+version: '3.8'
+
+services:
+  # Laravel Application (PHP 8.3 FPM)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: hotelmanagement-app:latest
+    container_name: hotelmanagement_app
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www
+    environment:
+      APP_ENV: local
+      APP_DEBUG: 'true'
+      APP_KEY: ${APP_KEY}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: hotelmanagement_db
+      DB_USERNAME: postgres
+      DB_PASSWORD: secretpassword
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    volumes:
+      - .:/var/www
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - pms_network
+    depends_on:
+      - postgres
+      - redis
+
+  # Web Server (Nginx)
+  webserver:
+    image: nginx:alpine
+    container_name: hotelmanagement_nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - pms_network
+    depends_on:
+      - app
+
+  # Database (PostgreSQL 16)
+  postgres:
+    image: postgres:16-alpine
+    container_name: hotelmanagement_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: hotelmanagement_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secretpassword
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - pms_network
+
+  # In-Memory Cache & Lock Store (Redis)
+  redis:
+    image: redis:7-alpine
+    container_name: hotelmanagement_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    networks:
+      - pms_network
+
+  # Background Queue Worker for Night Audit & Webhooks
+  queue-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hotelmanagement_queue
+    restart: unless-stopped
+    working_dir: /var/www
+    command: php artisan queue:work --tries=3 --timeout=90
+    volumes:
+      - .:/var/www
+    networks:
+      - pms_network
+    depends_on:
+      - app
+      - postgres
+      - redis
+
+networks:
+  pms_network:
+    driver: bridge
+
+volumes:
+  pgdata:
+    driver: local
+  redisdata:
+    driver: local

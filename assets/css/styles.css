@@ -1,0 +1,226 @@
+@import "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap";
+
+@theme inline {
+  --color-primary: #EF3F09;
+  --color-primary-hover: #D63405;
+  --color-dark-navy: #0C192E;
+  --color-slate-card: #FFFFFF;
+  --color-slate-bg: #F8FAFC;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+}
+
+:root {
+  --primary: #EF3F09;
+  --primary-hover: #D63405;
+  --dark-navy: #0C192E;
+  --dark-navy-light: #162642;
+  --gold-accent: #D4AF37;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* ==========================================================================
+   DEFAULT LIGHT MODE THEME STYLES
+   ========================================================================== */
+body {
+  font-family: var(--font-sans);
+  background-color: #F8FAFC;
+  color: #0F172A;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* LIGHT MODE SIDEBAR STYLING */
+aside#sidebar {
+  background-color: #FFFFFF;
+  border-right: 1px solid #E2E8F0;
+  color: #0F172A;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+aside#sidebar h1 {
+  color: #0F172A;
+}
+
+aside#sidebar p.text-slate-400,
+aside#sidebar h3 {
+  color: #64748B;
+}
+
+aside#sidebar a {
+  color: #334155;
+}
+
+aside#sidebar a:hover {
+  color: #0F172A;
+  background-color: #F1F5F9;
+}
+
+aside#sidebar a[style*="linear-gradient"],
+aside#sidebar a.sidebar-item-active {
+  background: linear-gradient(135deg, #EF3F09 0%, #F97316 100%) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 8px 20px -4px rgba(239, 63, 9, 0.4) !important;
+}
+
+aside#sidebar a[style*="linear-gradient"] span,
+aside#sidebar a[style*="linear-gradient"] svg,
+aside#sidebar a.sidebar-item-active span,
+aside#sidebar a.sidebar-item-active svg {
+  color: #FFFFFF !important;
+}
+
+/* Glassmorphism & Custom Cards */
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.05);
+}
+
+.luxury-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 24px;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.luxury-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -12px rgba(15, 23, 42, 0.12);
+  border-color: rgba(239, 63, 9, 0.3);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Status Badges */
+.badge-available {
+  background: #DCFCE7;
+  color: #15803D;
+  border: 1px solid #BBF7D0;
+}
+.badge-occupied {
+  background: #DBEAFE;
+  color: #1D4ED8;
+  border: 1px solid #BFDBFE;
+}
+.badge-cleaning {
+  background: #FEF9C3;
+  color: #A16207;
+  border: 1px solid #FEF08A;
+}
+.badge-maintenance {
+  background: #FEE2E2;
+  color: #B91C1C;
+  border: 1px solid #FECACA;
+}
+
+/* ==========================================================================
+   GLOBAL DARK MODE THEME STYLES
+   ========================================================================== */
+html.dark body {
+  background-color: #0B132B !important;
+  color: #F8FAFC !important;
+}
+
+html.dark main {
+  background-color: #0B132B !important;
+}
+
+html.dark aside#sidebar {
+  background-color: #0C192E !important;
+  border-right-color: #1E293B !important;
+  color: #FFFFFF !important;
+}
+
+html.dark aside#sidebar h1 {
+  color: #FFFFFF !important;
+}
+
+html.dark aside#sidebar a {
+  color: #CBD5E1 !important;
+}
+
+html.dark aside#sidebar a:hover {
+  color: #FFFFFF !important;
+  background-color: rgba(30, 41, 59, 0.8) !important;
+}
+
+html.dark header {
+  background-color: #1C2541 !important;
+  border-color: #3A506B !important;
+}
+
+html.dark .bg-white {
+  background-color: #1C2541 !important;
+  color: #F8FAFC !important;
+  border-color: #3A506B !important;
+}
+
+html.dark .bg-slate-50 {
+  background-color: #0B132B !important;
+  color: #F8FAFC !important;
+  border-color: #3A506B !important;
+}
+
+html.dark .bg-slate-100 {
+  background-color: #1C2541 !important;
+  color: #E2E8F0 !important;
+}
+
+html.dark .text-slate-900,
+html.dark .text-slate-800 {
+  color: #FFFFFF !important;
+}
+
+html.dark .text-slate-700,
+html.dark .text-slate-600 {
+  color: #CBD5E1 !important;
+}
+
+html.dark .text-slate-500,
+html.dark .text-slate-400 {
+  color: #94A3B8 !important;
+}
+
+html.dark .border-slate-200,
+html.dark .border-slate-100 {
+  border-color: #3A506B !important;
+}
+
+html.dark .luxury-card {
+  background-color: #1C2541 !important;
+  border-color: #3A506B !important;
+  color: #F8FAFC !important;
+}
+
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #0B132B !important;
+  color: #FFFFFF !important;
+  border-color: #3A506B !important;
+}
+
+html.dark table thead tr {
+  background-color: #0B132B !important;
+  border-color: #3A506B !important;
+}
+
+html.dark table tbody tr:hover {
+  background-color: rgba(58, 80, 107, 0.4) !important;
+}
