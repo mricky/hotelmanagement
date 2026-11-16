@@ -9,6 +9,7 @@ import (
 
 	"hotelmanagement/go-backend/database"
 	"hotelmanagement/go-backend/handlers"
+	"hotelmanagement/go-backend/middleware"
 	"hotelmanagement/go-backend/models"
 
 	"github.com/gin-contrib/cors"
@@ -28,7 +29,7 @@ func main() {
 	config := cors.DefaultConfig()
 	config.AllowAllOrigins = true
 	config.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}
-	config.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization"}
+	config.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization", "Idempotency-Key"}
 	r.Use(cors.New(config))
 
 	// API Access Logger Middleware
@@ -77,7 +78,7 @@ func main() {
 		v1.GET("/floors", handlers.GetFloors)
 		v1.POST("/floors", handlers.CreateFloor)
 		v1.GET("/bookings", handlers.GetBookings)
-		v1.POST("/bookings", handlers.CreateBooking)
+		v1.POST("/bookings", middleware.IdempotencyMiddleware(), handlers.CreateBooking)
 		v1.GET("/housekeeping/checklists", handlers.GetChecklists)
 		v1.POST("/housekeeping/checklists", handlers.CreateChecklist)
 		v1.GET("/housekeeping/categories", handlers.GetChecklistCategories)
@@ -93,7 +94,7 @@ func main() {
 		v1.GET("/dashboard", handlers.GetDashboardStats)
 		v1.GET("/permissions", handlers.GetRolePermissions)
 		v1.POST("/permissions/toggle", handlers.ToggleRolePermission)
-		v1.POST("/night-audit/run", handlers.RunNightAudit)
+		v1.POST("/night-audit/run", middleware.IdempotencyMiddleware(), handlers.RunNightAudit)
 		v1.GET("/channel-manager/matrix", handlers.GetChannelMatrix)
 		v1.GET("/audit-logs", handlers.GetAuditLogs)
 		v1.GET("/analytics/export-excel", handlers.ExportExcel)
@@ -104,9 +105,9 @@ func main() {
 		v1.PUT("/pos/menu/:id", handlers.UpdateMenuItem)
 		v1.DELETE("/pos/menu/:id", handlers.DeleteMenuItem)
 		v1.GET("/pos/orders", handlers.GetPOSOrders)
-		v1.POST("/pos/orders", handlers.CreatePOSOrder)
+		v1.POST("/pos/orders", middleware.IdempotencyMiddleware(), handlers.CreatePOSOrder)
 		v1.GET("/services", handlers.GetHotelServices)
-		v1.POST("/services/orders", handlers.CreateServiceOrder)
+		v1.POST("/services/orders", middleware.IdempotencyMiddleware(), handlers.CreateServiceOrder)
 		v1.GET("/lost-found", handlers.GetLostItems)
 		v1.POST("/lost-found", handlers.CreateLostItem)
 		v1.PUT("/lost-found/:id/claim", handlers.ClaimLostItem)
