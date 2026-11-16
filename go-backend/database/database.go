@@ -72,6 +72,7 @@ func InitDB() *gorm.DB {
 		&models.ServiceOrder{},
 		&models.LostItem{},
 		&models.APIAccessLog{},
+		&models.IdempotencyRecord{},
 	)
 	if err != nil {
 		log.Fatalf("Failed to auto migrate database schemas: %v", err)
